@@ -11,4 +11,11 @@ import { AlertComponent } from './components/alert/alert.component';
 })
 export class AppComponent {
   title = 'angular-tcg-angular-elements';
+  content: string | null = null;
+
+  constructor() {
+    setTimeout(() => {
+      this.content = '<app-alert message="rendered dinamically"></app-alert>';
+    }, 1000);
+  }
 }
