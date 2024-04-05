@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { AlertComponent } from './components/alert/alert.component';
 
@@ -11,11 +13,17 @@ import { AlertComponent } from './components/alert/alert.component';
 })
 export class AppComponent {
   title = 'angular-tcg-angular-elements';
-  content: string | null = null;
+  content: SafeHtml | null = null;
 
-  constructor() {
+  constructor(injector: Injector, domSanitizer: DomSanitizer) {
+    const AlertElement = createCustomElement(AlertComponent, {
+      injector: injector,
+    });
+    customElements.define('my-alert', AlertElement);
     setTimeout(() => {
-      this.content = '<app-alert message="rendered dinamically"></app-alert>';
+      this.content = domSanitizer.bypassSecurityTrustHtml(
+        '<my-alert message="rendered dinamically"></my-alert>'
+      );
     }, 1000);
   }
 }
